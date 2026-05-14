@@ -93,7 +93,7 @@ How an email becomes a verdict:
 | High Risk  | 61–80   | Likely phishing.                         |
 | Malicious  | 81–100  | Do not interact.                         |
 
-![Analytics dashboard](DASHBOARD_SCREENSHOT_HERE)
+<img src="docs/dashboard.png" alt="Streamlit threat-analytics dashboard" width="900" />
 
 ---
 

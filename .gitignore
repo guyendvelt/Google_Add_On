@@ -27,3 +27,19 @@ env/
 Thumbs.db
 .idea/
 *.swp
+
+# Internal planning and AI logs
+CLAUDE.MD
+PLAN.MD
+
+# Tests
+tests/
+pytest.ini
+
+# Internal planning and AI logs
+CLAUDE.MD
+PLAN.MD
+
+# Tests
+tests/
+pytest.ini
