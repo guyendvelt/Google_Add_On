@@ -52,8 +52,8 @@ class IndicatorsCache(Base):
         SAEnum(IndicatorType, name="indicator_type"), nullable=False
     )
     # Number of VirusTotal vendors that flagged this indicator. 0 = clean,
-    # 1..N = vendor count. The "is malicious" decision is no longer a bool
-    # — it's a threshold applied at scoring time (VT_CONFIRMED_THRESHOLD).
+    # 1..N = vendor count.
+    # a threshold applied at scoring time (VT_CONFIRMED_THRESHOLD).
     malicious_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     last_checked: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

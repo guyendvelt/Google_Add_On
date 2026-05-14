@@ -275,7 +275,7 @@ risk_by_verdict = {p["verdict"]: p for p in stats["risk_distribution"]}
 # Derived intelligence — turn raw counts into high-level metrics + trends.
 # Trends are computed from the only time-series the API exposes (daily_volume):
 # "today" vs "yesterday". A true hourly delta would need the backend to
-# expose hourly buckets — see README §8 for that enhancement.
+# expose hourly buckets
 # --------------------------------------------------------------------------
 
 total_scans = stats["total_scans"]
@@ -379,32 +379,32 @@ with a1:
 
 with a2:
     with st.container(border=True):
-        card_title("🚨", "Top 5 Threat Senders — Volume")
-        offenders = stats["top_threat_senders"]
+        card_title("🚨", "Top 5 Malicious Senders — Threat Volume")
+        offenders = stats["top_malicious_domains"]
         if not offenders:
             render_clean_state(
-                "No senders have sent mail in any threat band. No repeat "
+                "No senders have reached a Malicious verdict. No repeat "
                 "offenders in the current database partition."
             )
         else:
-            off_df = pd.DataFrame(offenders).sort_values("threat_count")
+            off_df = pd.DataFrame(offenders).sort_values("malicious_count")
             fig = px.bar(
                 off_df,
-                x="threat_count",
+                x="malicious_count",
                 y="domain",
                 orientation="h",
-                text="threat_count",
-                color_discrete_sequence=[VERDICT_COLORS["High Risk"]],
+                text="malicious_count",
+                color_discrete_sequence=[VERDICT_COLORS["Malicious"]],
             )
             fig.update_traces(
                 textposition="outside",
                 textfont_color="#C9D1D9",
-                marker_line_color=VERDICT_COLORS["Malicious"],
+                marker_line_color=VERDICT_COLORS["High Risk"],
                 marker_line_width=1,
             )
             style_chart(fig)
             fig.update_layout(
-                xaxis_title="Scans in a threat band (Suspicious +)",
+                xaxis_title="Malicious-verdict scans",
                 yaxis_title=None,
             )
             st.plotly_chart(fig, use_container_width=True)

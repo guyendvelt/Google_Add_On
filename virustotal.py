@@ -42,10 +42,9 @@ CACHE_TTL = timedelta(hours=24)
 # Threshold: how many VT vendors must flag an indicator for it to be treated
 # as "confirmed malicious" (absolute score override). Below this, the
 # indicator is "isolated" — a suspicious signal that adds points but does
-# NOT override the score. See PLAN.MD §4.
+# NOT override the score.
 VT_CONFIRMED_THRESHOLD = 3
 
-# Back-compat: some tests / scripts still import VT_BASE_URL.
 VT_BASE_URL = VT_URLS_BASE
 
 
@@ -78,8 +77,6 @@ class IndicatorResult:
 
     @property
     def is_malicious(self) -> bool:
-        # Back-compat alias. Under the new semantics, "malicious" means
-        # "confirmed by multiple vendors" — not just any vendor hit.
         return self.is_confirmed
 
 
@@ -134,8 +131,6 @@ def _classify(status_code: int, body_loader: Callable[[], dict]) -> tuple[int | 
     obscure-engine hit does not over-trigger.
     """
     if status_code == 404:
-        # Unknown to VT — treat as clean, but DO cache so we don't
-        # re-query the same unknown indicator within the TTL.
         return 0, None
     if status_code == 401:
         return None, "VT auth failed (check API key)"

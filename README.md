@@ -66,7 +66,7 @@ How an email becomes a verdict:
         │                       Docker Compose Stack                     │
         │                                                                │
         │   ┌──────────────────┐    ┌────────────────────────────────┐   │
-        │   │  FastAPI Backend │◄───┤  Streamlit Admin Dashboard     │   │
+        │   │  FastAPI Backend │◄───┤  Streamlit Analysis Dashboard  │   │
         │   │  - Pydantic in   │    │  - reads /api/stats only       │   │
         │   │  - Heuristics    │    │  - 5-band palette mirrors UI   │   │
         │   │  - VT (async)    │    └────────────────────────────────┘   │
@@ -111,7 +111,7 @@ Results are cached for 24h in PostgreSQL, so repeat indicators cost zero API cal
 
 ## 4. Technical DNA
 
-- **Stack** — **FastAPI** (async I/O for concurrent threat-intel lookups), **PostgreSQL** (persistence + indicator cache), **Docker Compose** (one-command orchestration), **Streamlit** (admin analytics).
+- **Stack** — **FastAPI** (async I/O for concurrent threat-intel lookups), **PostgreSQL** (persistence + indicator cache), **Docker Compose** (one-command orchestration), **Streamlit** (Analysis dashboard).
 - **Security** — **Least-privilege OAuth scopes** (read only the currently-open message), **PII-safe logging** (attachment hashes only — never file bytes; sender domain only — never full addresses or content), strict Pydantic input validation.
 - **Deterministic logic** — **No-LLM policy.** Scoring is pure rules + threat intel, making every verdict 100% explainable, auditable, and consistent — the same email always scores the same.
 

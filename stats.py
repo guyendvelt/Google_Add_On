@@ -238,7 +238,7 @@ def _compute_detection_sources(db: Session) -> DetectionSourceCounts:
 
 @router.get("/stats", response_model=StatsResponse)
 def get_stats(db: Annotated[Session, Depends(get_db)]) -> StatsResponse:
-    """Aggregate metrics for the admin dashboard."""
+    """Aggregate metrics for the Analysis dashboard."""
     now_utc = datetime.now(timezone.utc)
     total = db.scalar(select(func.count()).select_from(ScansHistory)) or 0
     return StatsResponse(

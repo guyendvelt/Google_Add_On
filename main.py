@@ -1,6 +1,6 @@
 """FastAPI app entrypoint for the Malicious Email Scorer.
 
-Wires the Phase 4 analysis pipeline:
+analysis pipeline:
     sanitize -> keyword regex -> link heuristics -> VirusTotal (cache-first)
     -> deterministic aggregation -> verdict.
 """
@@ -42,11 +42,9 @@ app = FastAPI(
     description="Deterministic phishing/maliciousness scorer for the Gmail Add-on.",
 )
 
-# Admin aggregation endpoint (Stage 2) — feeds the Streamlit dashboard.
+# Analysis aggregation endpoint (Stage 2) — feeds the Streamlit dashboard.
 app.include_router(stats_router)
 
-# Scoring weights (PLAN.MD §4). VT-confirmed (>= threshold) is an absolute
-# override -> 100. VT-isolated (1-2 vendor hits) is suspicious-but-additive.
 LINK_HEURISTIC_POINTS = 30
 KEYWORD_POINTS = 30
 SENDER_MISMATCH_POINTS = 20
@@ -125,27 +123,27 @@ def analyze_email(
         len(payload.links), len(payload.attachments),
     )
 
-    # Rule 0: sanitize HTML/scripts before any regex sees the text.
+    # sanitize HTML/scripts before any regex sees the text.
     clean_text = sanitize_text(payload.subject) + "\n" + sanitize_text(payload.body)
 
-    # Rule 3 (PLAN.MD §4): keyword regex on sanitized text.
+    # keyword regex on sanitized text.
     keyword_hits = scan_keywords(clean_text)
 
-    # Rule 2: link heuristics on every URL.
+    # link heuristics on every URL.
     heuristic_hits: dict[str, list[str]] = {}
     for url in payload.links:
         labels = check_link_heuristics(url)
         if labels:
             heuristic_hits[url] = labels
 
-    # Rule 5: filename heuristics (dangerous + double-extension).
+    # filename heuristics (dangerous + double-extension).
     attachment_hits: dict[str, list[str]] = {}
     for att in payload.attachments:
         labels = check_attachment_filename(att.name)
         if labels:
             attachment_hits[att.name] = labels
 
-    # Rule 1 & 6: VirusTotal — concurrent batch for URLs AND file hashes.
+    # VirusTotal — concurrent batch for URLs AND file hashes.
     # Two batches share the same event loop run; their network I/O overlaps,
     # so adding the file-hash check doesn't sequentially extend latency.
     file_hashes = [att.sha256 for att in payload.attachments]
@@ -161,16 +159,13 @@ def analyze_email(
         r.error for r in (*vt_url_results, *vt_file_results) if r.error
     })
 
-    # Rule 4: sender display-name brand impersonation.
+    # sender display-name brand impersonation.
     mismatch_hits = check_sender_mismatch(payload.sender)
     sender_domain = extract_sender_domain(payload.sender)
 
     # --- Aggregation ---
     reasoning_parts: list[str] = []
 
-    # Override per PLAN.MD §4: a CONFIRMED VT verdict (>= threshold vendors
-    # agreeing) on any URL or file hash forces 100/Malicious. Isolated
-    # signals (1-2 vendors) drop to the additive branch below.
     if vt_confirmed_urls or vt_confirmed_hashes:
         score = 100
         verdict: Verdict = "Malicious"
@@ -217,7 +212,7 @@ def analyze_email(
 
     reasoning_text = " | ".join(reasoning_parts)
 
-    # PII-safe scan logging (PLAN.MD §5): only the sender's domain.
+    # PII-safe scan logging: only the sender's domain.
     db.add(
         ScansHistory(
             sender_domain=(sender_domain or "unknown")[:MAX_LOGGED_DOMAIN_LEN],

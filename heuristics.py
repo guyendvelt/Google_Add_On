@@ -1,8 +1,8 @@
 """Phishing heuristics: HTML sanitization, keyword regex, URL pattern checks.
 
 Sanitization runs first so attackers can't smuggle indicators inside HTML
-tags, attributes, or scripts (PLAN.MD §6). All regex patterns are bounded
-(no unbounded `.*`) to avoid catastrophic backtracking on hostile input.
+tags, attributes, or scripts. All regex patterns are bounded
+to avoid catastrophic backtracking on hostile input.
 """
 from __future__ import annotations
 
@@ -111,7 +111,7 @@ def extract_sender_domain(sender_field: str) -> str:
 
 
 def check_sender_mismatch(sender_field: str) -> list[str]:
-    """Display-name brand-impersonation detector (PLAN.MD Rule 4).
+    """Display-name brand-impersonation detector.
 
     Returns a single `display-name-mismatch:<brand>` label when the display
     name on the From line names a protected brand (`PROTECTED_BRANDS`) but

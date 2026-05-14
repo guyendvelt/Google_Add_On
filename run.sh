@@ -26,7 +26,7 @@ NGROK_DOMAIN="${NGROK_DOMAIN:-routing-recant-worry.ngrok-free.dev}"
 NGROK_INSPECTOR="http://127.0.0.1:4040"
 NGROK_PID_FILE=".ngrok.pid"
 NGROK_LOG_FILE=".ngrok.log"
-HEALTH_RETRIES=30                         # ~60s total at 2s intervals
+HEALTH_RETRIES=30                        
 HEALTH_INTERVAL=2
 
 # --------------------------------------------------------------------------
@@ -46,7 +46,7 @@ warn()    { printf '%s[WARN]  %s%s\n' "$C_YELLOW" "$1" "$C_RESET"; }
 error()   { printf '%s[ERROR] %s%s\n' "$C_RED" "$1" "$C_RESET" >&2; }
 
 # --------------------------------------------------------------------------
-# Resolve the docker compose command (v2 plugin vs legacy v1 binary).
+# Resolve the docker compose command 
 # --------------------------------------------------------------------------
 detect_compose() {
   if docker compose version >/dev/null 2>&1; then

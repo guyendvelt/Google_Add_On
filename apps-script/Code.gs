@@ -1,5 +1,5 @@
 /**
- * Malicious Email Scorer — Gmail Add-on client (Phase 6).
+ * Malicious Email Scorer — Gmail Add-on client.
  *
  * Triggered when the user opens an email. Extracts sender/subject/body/links,
  * POSTs them to the FastAPI backend (via ngrok), and renders the score +
@@ -222,10 +222,7 @@ function callBackend_(payload) {
 // -------------------------- UI --------------------------
 
 // Unicode directional embedding: forces the wrapped string to render
-// left-to-right even when the user's Gmail UI is RTL (Hebrew/Arabic).
-// Without this, the BiDi algorithm treats leading bullets and trailing
-// periods as neutral punctuation and flips them to the wrong side —
-// you get ".This email appears safe •" instead of "• This email...".
+// left-to-right even when the user's Gmail UI is RTL.
 var LRE = '‪';   // LEFT-TO-RIGHT EMBEDDING
 var PDF = '‬';   // POP DIRECTIONAL FORMATTING
 

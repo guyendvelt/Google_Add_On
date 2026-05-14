@@ -1,6 +1,6 @@
 """Pydantic request/response models.
 
-Strict validation per PLAN.MD §6:
+Strict validation:
   - `extra="forbid"` rejects unknown fields (defense against payload smuggling).
   - Every string is length-bounded and the list is item-count-bounded so
     abusive payloads are refused at the boundary rather than downstream.
