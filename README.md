@@ -93,6 +93,8 @@ How an email becomes a verdict:
 | High Risk  | 61–80   | Likely phishing.                         |
 | Malicious  | 81–100  | Do not interact.                         |
 
+Added an **Analysis Dashboard** to give security operators a live, system-wide view of threats — KPIs, the 5-band risk spectrum, top threat senders, and a forensic feed of recent high-risk scans.
+
 <img src="docs/dashboard.png" alt="Streamlit threat-analytics dashboard" width="900" />
 
 ---
